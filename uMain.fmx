@@ -225,16 +225,16 @@ object frmMain: TfrmMain
     Text = '-'
     TabOrder = 12
   end
-  object DxJoystick: TFDxJoystick
-    CooperativeLevel = []
-    OnStateChange = DxJoystickStateChange
-    Left = 496
-    Top = 128
-  end
   object saveCSV: TSaveDialog
     DefaultExt = '*.csv'
     Filter = 'CSV|*.csv'
     Left = 448
     Top = 280
+  end
+  object DxJoystick: TFDxJoystick
+    CooperativeLevel = []
+    OnStateChange = DxJoystickStateChange
+    Left = 496
+    Top = 128
   end
 end

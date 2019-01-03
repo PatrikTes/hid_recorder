@@ -155,6 +155,13 @@ begin
                 joystickReference.I['PitchMax'] := newStatus.CurrentValue.AsVariant;
                 lblField.Text := newStatus.CurrentKey;
                 lblValue.Text := newStatus.CurrentValue.AsVariant;
+
+                // Check if the chanel is inverted
+                if joystickReference.I['PitchMax'] < joystickReference.I['PitchMin'] then
+                  joystickReference.B['PitchInv'] := true
+                 else
+                   joystickReference.B['PitchInv'] := false;
+
                 break;
               end;
             end;
@@ -174,6 +181,13 @@ begin
                 joystickReference.I['NickMax'] := newStatus.CurrentValue.AsVariant;
                 lblField.Text := newStatus.CurrentKey;
                 lblValue.Text := newStatus.CurrentValue.AsVariant;
+
+                // Check if the chanel is inverted
+                if joystickReference.I['NickMax'] < joystickReference.I['NickMin'] then
+                  joystickReference.B['NickInv'] := true
+                else
+                   joystickReference.B['NickInv'] := false;
+
                 break;
               end;
             end;
@@ -194,6 +208,13 @@ begin
                 joystickReference.I['GierMax'] := newStatus.CurrentValue.AsVariant;
                 lblField.Text := newStatus.CurrentKey;
                 lblValue.Text := newStatus.CurrentValue.AsVariant;
+
+                // Check if the chanel is inverted
+                if joystickReference.I['GierMax'] < joystickReference.I['GierMin'] then
+                  joystickReference.B['GierInv'] := true
+                else
+                   joystickReference.B['GierInv'] := false;
+
                 break;
               end;
             end;
@@ -215,6 +236,12 @@ begin
                 joystickReference.I['RollMax'] := newStatus.CurrentValue.AsVariant;
                 lblField.Text := newStatus.CurrentKey;
                 lblValue.Text := newStatus.CurrentValue.AsVariant;
+
+                // Check if the chanel is inverted
+                if joystickReference.I['RollMax'] < joystickReference.I['RollMin'] then
+                  joystickReference.B['RollInv'] := true
+                else
+                   joystickReference.B['RollInv'] := false;
                 break;
               end;
             end;
@@ -301,42 +328,42 @@ begin
   case fStep of
     wPitchMin:
     begin
-      lblStatus.Text := 'Go to minimum Pitch Position and press the fire Button!';
+      lblStatus.Text := 'Go to minimum PITCH position and press RETURN!';
     end;
 
     wPitchMax:
     begin
-      lblStatus.Text := 'Go to maximum Pitch Position and press the fire Button!';
+      lblStatus.Text := 'Go to maximum PITCH position and press RETUEN';
     end;
 
     wNickMin:
     begin
-      lblStatus.Text := 'Go to minimum Nick Position and press the fire Button!';
+      lblStatus.Text := 'Go to minimum NICK position and press RETUEN';
     end;
 
     wNickMax:
     begin
-      lblStatus.Text := 'Go to maximum Nick Position and press the fire Button!';
+      lblStatus.Text := 'Go to maximum NICK position and press RETUEN';
     end;
 
     wGierMin:
     begin
-      lblStatus.Text := 'Go to minimum Gier Position and press the fire Button!';
+      lblStatus.Text := 'Go to left GIER position and press RETUEN';
     end;
 
     wGierMax:
     begin
-      lblStatus.Text := 'Go to maximum Gier Position and press the fire Button!';
+      lblStatus.Text := 'Go to right GIER position and press RETUEN';
     end;
 
     wRollMin:
     begin
-      lblStatus.Text := 'Go to minimum Roll Position and press the fire Button!';
+      lblStatus.Text := 'Go to left ROLL position and press RETUEN';
     end;
 
     wRollMax:
     begin
-      lblStatus.Text := 'Go to maximum Roll Position and press the fire Button!';
+      lblStatus.Text := 'Go to right ROLL position and press the fire Button!';
     end;
 
   end;
