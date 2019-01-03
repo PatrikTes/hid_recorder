@@ -438,7 +438,7 @@ end;
 procedure TfrmMain.btnRecordingClick(Sender: TObject);
 begin
 //
-  lblStatus.Text := 'Press Fire or Key to start recording!';
+  lblStatus.Text := 'Press RETURN or Key to start / stopp recording!';
   lblStatus.Visible := True;
   btnCalib.Enabled := False;
   btnRecording.Enabled := False;
@@ -476,6 +476,8 @@ begin
       getJoystickValuesToObject(joystickNewStatus);
       compareObjects(joystickNewStatus);
     end;
+
+
     mRecordingStart :
     begin
       joystickNewStatus := SO;
@@ -487,10 +489,12 @@ begin
         joystickRecorder := SO;
         fTimer := 0;
         fObjectIndex := 0;
-        lblStatus.Text := 'Press Fire to stop recording!';
+        lblStatus.Text := 'Press RETUN to stop recording!';
         fMode := mRecordingRunning;
       end;
     end;
+
+
     mRecordingRunning :
     begin
       joystickNewStatus := SO;
@@ -515,6 +519,7 @@ begin
             for j := 0 to joystickRecorder.A['Results'].Length - 1 do
             begin
               try
+                // ToDo: Hier muss die Umrechnung noch rein.
                 writeln(csvTextFile,
                 Inttostr(joystickRecorder.A['Results'].O[j].I['Time']) + ';' +
                 Inttostr(joystickRecorder.A['Results'].O[j].I['PitchCurrent'])  + ';' +
