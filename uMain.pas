@@ -34,6 +34,7 @@ type
     lblTimer: TLabel;
     DxJoystick: TFDxJoystick;
     saveCSV: TSaveDialog;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure comDeviceChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -45,6 +46,7 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button1Click(Sender: TObject);
   private
     fButtonPressed : Boolean;
     fMode : TMode;
@@ -70,6 +72,8 @@ type
     function getLocalPath: string;
     function GetSpecialFolderPath(Folder: Integer; CanCreate: Boolean): string;
 
+function mapvalue(amin: Integer; amax: Integer; bmin: Integer;  bmax:Integer; valuea: Integer; invert: boolean) : string;
+
     { Private-Deklarationen }
   public
     { Public-Deklarationen }
@@ -81,6 +85,35 @@ var
 implementation
 
 {$R *.fmx}
+
+
+
+function TfrmMain.mapvalue(amin: Integer; amax: Integer; bmin: Integer;  bmax:Integer; valuea: Integer; invert: boolean) : string;
+var
+  offsetA, offsetB : integer;
+  rangeA, RangeB : integer;
+  valueb : double;
+  verha, verhb : double;
+  RetValue : string;
+
+  begin
+
+    //Berechnung
+    offseta := 0 - amin;  //define offset of A
+    rangea := offseta + amax;
+
+    offsetb := 0 - bmin; //define offset of B
+    rangeb := offsetb + bmax; // Wertebereich
+
+    verha := 100 * (offsetA + valuea ) / rangea;  // Verhältnis von a berechnen
+
+    if invert then verha := 100 - verha;
+
+    valueb := (rangeb * verha / 100) - offsetb;
+
+    Result := FloatToStrF(valueb, ffFixed, 4,3);
+
+end;
 
 procedure TfrmMain.btnCalibClick(Sender: TObject);
 begin
@@ -447,6 +480,11 @@ begin
 
 end;
 
+procedure TfrmMain.Button1Click(Sender: TObject);
+begin
+ showmessage( mapvalue(1000, 2000, -1, 1, 1250, false)  );
+end;
+
 procedure TfrmMain.comDeviceChange(Sender: TObject);
 begin
   comHID.ItemIndex := -1;
@@ -522,10 +560,10 @@ begin
                 // ToDo: Hier muss die Umrechnung noch rein.
                 writeln(csvTextFile,
                 Inttostr(joystickRecorder.A['Results'].O[j].I['Time']) + ';' +
-                Inttostr(joystickRecorder.A['Results'].O[j].I['PitchCurrent'])  + ';' +
-                Inttostr(joystickRecorder.A['Results'].O[j].I['GierCurrent']) + ';' +
-                Inttostr(joystickRecorder.A['Results'].O[j].I['NickCurrent']) + ';' +
-                Inttostr(joystickRecorder.A['Results'].O[j].I['RollCurrent'])  + ';');
+                mapvalue(joystickReference.I['PitchMin'],joystickReference.I['PitchMax'],-1,1,joystickRecorder.A['Results'].O[j].I['PitchCurrent'],joystickReference.B['PitchInv']) + ';' +
+                mapvalue(joystickReference.I['GierMin'],joystickReference.I['GierMax'],-1,1,joystickRecorder.A['Results'].O[j].I['GierCurrent'],joystickReference.B['GierInv']) + ';' +
+                mapvalue(joystickReference.I['NickMin'],joystickReference.I['NickMax'],-1,1,joystickRecorder.A['Results'].O[j].I['NickCurrent'],joystickReference.B['NickInv']) + ';' +
+                mapvalue(joystickReference.I['RollMin'],joystickReference.I['RollMax'],-1,1,joystickRecorder.A['Results'].O[j].I['RollCurrent'],joystickReference.B['RollInv']) + ';' );
               except;
 
               end;

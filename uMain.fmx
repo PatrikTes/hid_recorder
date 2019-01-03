@@ -231,6 +231,13 @@ object frmMain: TfrmMain
     Left = 448
     Top = 280
   end
+  object Button1: TButton
+    Position.X = 440.000000000000000000
+    Position.Y = 40.000000000000000000
+    TabOrder = 22
+    Text = 'Button1'
+    OnClick = Button1Click
+  end
   object DxJoystick: TFDxJoystick
     CooperativeLevel = []
     OnStateChange = DxJoystickStateChange
