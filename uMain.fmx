@@ -1,0 +1,240 @@
+object frmMain: TfrmMain
+  Left = 0
+  Top = 0
+  Caption = 'Device'
+  ClientHeight = 440
+  ClientWidth = 1114
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnClose = FormClose
+  OnDestroy = FormDestroy
+  OnKeyUp = FormKeyUp
+  DesignerMasterStyle = 0
+  object btnCalib: TButton
+    Enabled = False
+    Position.X = 24.000000000000000000
+    Position.Y = 96.000000000000000000
+    Size.Width = 321.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    Text = 'Callibration'
+    OnClick = btnCalibClick
+  end
+  object Image1: TImage
+    MultiResBitmap = <
+      item
+      end>
+    Position.X = 24.000000000000000000
+    Position.Y = 184.000000000000000000
+    Size.Width = 345.000000000000000000
+    Size.Height = 225.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Image2: TImage
+    MultiResBitmap = <
+      item
+      end>
+    Position.X = 104.000000000000000000
+    Position.Y = 280.000000000000000000
+    Size.Width = 25.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Image3: TImage
+    MultiResBitmap = <
+      item
+      end>
+    Position.X = 264.000000000000000000
+    Position.Y = 280.000000000000000000
+    Size.Width = 25.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object comDevice: TComboBox
+    Position.X = 88.000000000000000000
+    Position.Y = 56.000000000000000000
+    Size.Width = 257.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 8
+    OnChange = comDeviceChange
+  end
+  object Label1: TLabel
+    Position.X = 24.000000000000000000
+    Position.Y = 56.000000000000000000
+    Size.Width = 65.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Device'
+    TabOrder = 10
+  end
+  object Label2: TLabel
+    Position.X = 24.000000000000000000
+    Position.Y = 56.000000000000000000
+    Size.Width = 65.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'HID'
+    Visible = False
+    TabOrder = 9
+  end
+  object comHID: TComboBox
+    Position.X = 88.000000000000000000
+    Position.Y = 56.000000000000000000
+    Size.Width = 257.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 7
+    Visible = False
+    OnChange = comHIDChange
+  end
+  object tmrRun: TTimer
+    Enabled = False
+    Interval = 10
+    OnTimer = tmrRunTimer
+    Left = 656
+    Top = 104
+  end
+  object lblStatus: TLabel
+    AutoSize = True
+    StyledSettings = [Family, FontColor]
+    Position.X = 16.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 1081.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 20.000000000000000000
+    TextSettings.Font.StyleExt = {00070000000000000004000000}
+    Text = '-'
+    TabOrder = 13
+  end
+  object lblField: TLabel
+    Position.X = 576.000000000000000000
+    Position.Y = 368.000000000000000000
+    Text = 'Axes'
+    TabOrder = 14
+  end
+  object lblValue: TLabel
+    Position.X = 712.000000000000000000
+    Position.Y = 368.000000000000000000
+    TabOrder = 15
+  end
+  object grdSettings: TTMSFMXGrid
+    DisableFocusEffect = False
+    Position.X = 576.000000000000000000
+    Position.Y = 160.000000000000000000
+    TabOrder = 16
+    Size.Width = 481.000000000000000000
+    Size.Height = 201.000000000000000000
+    Size.PlatformDefault = False
+    RowCount = 2
+    Options.Editing.CalcFormat = '%g'
+    Options.Grouping.CalcFormat = '%g'
+    Options.Grouping.GroupCountFormat = '(%d)'
+    Options.IO.XMLEncoding = 'ISO-8859-1'
+    Options.Mouse.TouchScrollingSensitivity = 0.100000001490116100
+    Options.Printing.PageNumberFormat = '%g'
+    Version = '2.3.2.7'
+    Fill.Kind = Solid
+    Stroke.Kind = Solid
+    TopRow = 1
+    LeftCol = 1
+    Columns = <
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claBlack
+        ID = ''
+        Width = 68.000000000000000000
+      end
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claBlack
+        ID = ''
+        Width = 150.000000000000000000
+      end
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claBlack
+        ID = ''
+        Width = 68.000000000000000000
+      end
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claBlack
+        ID = ''
+        Width = 68.000000000000000000
+      end
+      item
+        Color = claNull
+        ColumnType = ctCheckBox
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claBlack
+        ID = ''
+        ReadOnly = True
+        Width = 68.000000000000000000
+      end>
+  end
+  object lblButton: TLabel
+    Position.X = 576.000000000000000000
+    Position.Y = 104.000000000000000000
+    TabOrder = 17
+  end
+  object btnRecording: TButton
+    Enabled = False
+    Position.X = 24.000000000000000000
+    Position.Y = 128.000000000000000000
+    Size.Width = 321.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 18
+    Text = 'Recording'
+    OnClick = btnRecordingClick
+  end
+  object lblTimer: TLabel
+    AutoSize = True
+    StyledSettings = [Family, FontColor]
+    Position.X = 24.000000000000000000
+    Position.Y = 152.000000000000000000
+    Size.Width = 345.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 24.000000000000000000
+    TextSettings.Font.StyleExt = {00070000000000000004000000}
+    Text = '-'
+    TabOrder = 12
+  end
+  object DxJoystick: TFDxJoystick
+    CooperativeLevel = []
+    OnStateChange = DxJoystickStateChange
+    Left = 496
+    Top = 128
+  end
+  object saveCSV: TSaveDialog
+    DefaultExt = '*.csv'
+    Filter = 'CSV|*.csv'
+    Left = 448
+    Top = 280
+  end
+end
