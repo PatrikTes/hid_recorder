@@ -2,8 +2,9 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Device'
-  ClientHeight = 440
-  ClientWidth = 1114
+  ClientHeight = 391
+  ClientWidth = 823
+  Position = Designed
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -12,6 +13,22 @@ object frmMain: TfrmMain
   OnDestroy = FormDestroy
   OnKeyUp = FormKeyUp
   DesignerMasterStyle = 0
+  object Panel2: TPanel
+    Position.X = 226.000000000000000000
+    Position.Y = 230.000000000000000000
+    Size.Width = 115.000000000000000000
+    Size.Height = 120.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 27
+  end
+  object Panel1: TPanel
+    Position.X = 48.000000000000000000
+    Position.Y = 230.000000000000000000
+    Size.Width = 115.000000000000000000
+    Size.Height = 120.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 28
+  end
   object btnCalib: TButton
     Enabled = False
     Position.X = 24.000000000000000000
@@ -22,36 +39,6 @@ object frmMain: TfrmMain
     TabOrder = 5
     Text = 'Callibration'
     OnClick = btnCalibClick
-  end
-  object Image1: TImage
-    MultiResBitmap = <
-      item
-      end>
-    Position.X = 24.000000000000000000
-    Position.Y = 184.000000000000000000
-    Size.Width = 345.000000000000000000
-    Size.Height = 225.000000000000000000
-    Size.PlatformDefault = False
-  end
-  object Image2: TImage
-    MultiResBitmap = <
-      item
-      end>
-    Position.X = 104.000000000000000000
-    Position.Y = 280.000000000000000000
-    Size.Width = 25.000000000000000000
-    Size.Height = 25.000000000000000000
-    Size.PlatformDefault = False
-  end
-  object Image3: TImage
-    MultiResBitmap = <
-      item
-      end>
-    Position.X = 264.000000000000000000
-    Position.Y = 280.000000000000000000
-    Size.Width = 25.000000000000000000
-    Size.Height = 25.000000000000000000
-    Size.PlatformDefault = False
   end
   object comDevice: TComboBox
     Position.X = 88.000000000000000000
@@ -95,8 +82,8 @@ object frmMain: TfrmMain
     Enabled = False
     Interval = 10
     OnTimer = tmrRunTimer
-    Left = 656
-    Top = 104
+    Left = 768
+    Top = 8
   end
   object lblStatus: TLabel
     AutoSize = True
@@ -112,8 +99,8 @@ object frmMain: TfrmMain
     TabOrder = 13
   end
   object lblField: TLabel
-    Position.X = 576.000000000000000000
-    Position.Y = 368.000000000000000000
+    Position.X = 400.000000000000000000
+    Position.Y = 360.000000000000000000
     Text = 'Axes'
     TabOrder = 14
   end
@@ -124,11 +111,11 @@ object frmMain: TfrmMain
   end
   object grdSettings: TTMSFMXGrid
     DisableFocusEffect = False
-    Position.X = 576.000000000000000000
-    Position.Y = 160.000000000000000000
+    Position.X = 384.000000000000000000
+    Position.Y = 224.000000000000000000
     TabOrder = 16
-    Size.Width = 481.000000000000000000
-    Size.Height = 201.000000000000000000
+    Size.Width = 425.000000000000000000
+    Size.Height = 129.000000000000000000
     Size.PlatformDefault = False
     RowCount = 2
     Options.Editing.CalcFormat = '%g'
@@ -228,20 +215,31 @@ object frmMain: TfrmMain
   object saveCSV: TSaveDialog
     DefaultExt = '*.csv'
     Filter = 'CSV|*.csv'
-    Left = 448
-    Top = 280
+    Left = 624
+    Top = 24
   end
-  object Button1: TButton
-    Position.X = 440.000000000000000000
-    Position.Y = 40.000000000000000000
-    TabOrder = 22
-    Text = 'Button1'
-    OnClick = Button1Click
+  object left: TLabel
+    Position.X = 100.000000000000000000
+    Position.Y = 280.000000000000000000
+    Size.Width = 17.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'O'
+    TabOrder = 25
+  end
+  object right: TLabel
+    Position.X = 280.000000000000000000
+    Position.Y = 280.000000000000000000
+    Size.Width = 17.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'O'
+    TabOrder = 26
   end
   object DxJoystick: TFDxJoystick
     CooperativeLevel = []
     OnStateChange = DxJoystickStateChange
-    Left = 496
-    Top = 128
+    Left = 688
+    Top = 16
   end
 end

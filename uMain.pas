@@ -17,9 +17,6 @@ type
 
   TfrmMain = class(TForm)
     btnCalib: TButton;
-    Image1: TImage;
-    Image2: TImage;
-    Image3: TImage;
     comDevice: TComboBox;
     Label1: TLabel;
     tmrRun: TTimer;
@@ -34,7 +31,10 @@ type
     lblTimer: TLabel;
     DxJoystick: TFDxJoystick;
     saveCSV: TSaveDialog;
-    Button1: TButton;
+    left: TLabel;
+    right: TLabel;
+    Panel1: TPanel;
+    Panel2: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure comDeviceChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -72,7 +72,8 @@ type
     function getLocalPath: string;
     function GetSpecialFolderPath(Folder: Integer; CanCreate: Boolean): string;
 
-function mapvalue(amin: Integer; amax: Integer; bmin: Integer;  bmax:Integer; valuea: Integer; invert: boolean) : string;
+    function mapvalue(amin: Integer; amax: Integer; bmin: Integer;  bmax:Integer; valuea: Integer; invert: boolean) : string;
+    function mapvalueint(amin: Integer; amax: Integer; bmin: Integer;  bmax:Integer; valuea: Integer; invert: boolean) : integer;
 
     { Private-Deklarationen }
   public
@@ -111,9 +112,47 @@ var
 
     valueb := (rangeb * verha / 100) - offsetb;
 
+    // FineTuning for max values
+    if valueb > bmax then valueb := bmax;
+    if valueb < bmin then valueb := bmin;
+
     Result := FloatToStrF(valueb, ffFixed, 4,3);
 
 end;
+
+
+function TfrmMain.mapvalueint(amin: Integer; amax: Integer; bmin: Integer;  bmax:Integer; valuea: Integer; invert: boolean) : integer;
+var
+  offsetA, offsetB : integer;
+  rangeA, RangeB : integer;
+  valueb : double;
+  verha, verhb : double;
+  RetValue : string;
+
+  begin
+
+    //Berechnung
+    offseta := 0 - amin;  //define offset of A
+    rangea := offseta + amax;
+
+    offsetb := 0 - bmin; //define offset of B
+    rangeb := offsetb + bmax; // Wertebereich
+
+    verha := 100 * (offsetA + valuea ) / rangea;  // Verhältnis von a berechnen
+
+    if invert then verha := 100 - verha;
+
+    valueb := (rangeb * verha / 100) - offsetb;
+
+    // FineTuning for max values
+    if valueb > bmax then valueb := bmax;
+    if valueb < bmin then valueb := bmin;
+
+    Result := round(valueb);
+
+end;
+
+
 
 procedure TfrmMain.btnCalibClick(Sender: TObject);
 begin
@@ -143,8 +182,6 @@ begin
   joystickRecorder.A['Results'].O[fObjectIndex].I['GierCurrent'] := newStatus.I[joystickReference.S['GierKey']];
   joystickRecorder.A['Results'].O[fObjectIndex].I['NickCurrent'] := newStatus.I[joystickReference.S['NickKey']];
   joystickRecorder.A['Results'].O[fObjectIndex].I['RollCurrent'] := newStatus.I[joystickReference.S['RollKey']];
-
-
 end;
 
 procedure TfrmMain.compareObjects(newStatus: ISuperObject);
@@ -482,7 +519,7 @@ end;
 
 procedure TfrmMain.Button1Click(Sender: TObject);
 begin
- showmessage( mapvalue(1000, 2000, -1, 1, 1250, false)  );
+ left.Position.X := Left.Position.x +5;
 end;
 
 procedure TfrmMain.comDeviceChange(Sender: TObject);
@@ -540,6 +577,13 @@ begin
       inc(fObjectIndex);
       fillReference(joystickNewStatus);
 
+      //Todo diese Berechnung sollte beim Test (aber nicht beim Recording angeeigt werden, damit das Rrcording nicht verhögert wird.
+      left.Position.Y := 280 + (mapvalueint(joystickReference.I['PitchMin'],joystickReference.I['PitchMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['PitchCurrent'],joystickReference.B['PitchInv']))*-1;
+      left.Position.X := 100 + (mapvalueint(joystickReference.I['GierMin'],joystickReference.I['GierMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['GierCurrent'],joystickReference.B['GierInv']));
+      right.Position.Y := 280 + (mapvalueint(joystickReference.I['NickMin'],joystickReference.I['NickMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['NickCurrent'],joystickReference.B['NickInv']))*-1;
+      right.Position.X := 280 + (mapvalueint(joystickReference.I['RollMin'],joystickReference.I['RollMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['RollCurrent'],joystickReference.B['RollInv']));
+
+
       if fButtonPressed or joystickNewStatus.A[joystickReference.S['FireArray']].O[joystickReference.I['Position']].B[joystickReference.S['ButtonVariant']] then
       begin
         fButtonPressed := False;
@@ -557,7 +601,6 @@ begin
             for j := 0 to joystickRecorder.A['Results'].Length - 1 do
             begin
               try
-                // ToDo: Hier muss die Umrechnung noch rein.
                 writeln(csvTextFile,
                 Inttostr(joystickRecorder.A['Results'].O[j].I['Time']) + ';' +
                 mapvalue(joystickReference.I['PitchMin'],joystickReference.I['PitchMax'],-1,1,joystickRecorder.A['Results'].O[j].I['PitchCurrent'],joystickReference.B['PitchInv']) + ';' +
