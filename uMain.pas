@@ -35,6 +35,8 @@ type
     right: TLabel;
     Panel1: TPanel;
     Panel2: TPanel;
+    showsticks: TCheckBox;
+    Timer1: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure comDeviceChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -47,6 +49,7 @@ type
       Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button1Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
     fButtonPressed : Boolean;
     fMode : TMode;
@@ -71,9 +74,10 @@ type
     procedure fillReference(newStatus: ISuperObject);
     function getLocalPath: string;
     function GetSpecialFolderPath(Folder: Integer; CanCreate: Boolean): string;
-
     function mapvalue(amin: Integer; amax: Integer; bmin: Integer;  bmax:Integer; valuea: Integer; invert: boolean) : string;
     function mapvalueint(amin: Integer; amax: Integer; bmin: Integer;  bmax:Integer; valuea: Integer; invert: boolean) : integer;
+    procedure doRecord(Sender:TObject);
+    procedure setscreenjoystick(Sender:TObject);
 
     { Private-Deklarationen }
   public
@@ -87,7 +91,25 @@ implementation
 
 {$R *.fmx}
 
+procedure TfrmMain.setscreenjoystick(Sender: TObject);
+begin
+      joystickNewStatus := SO;
+      getJoystickValuesToObject(joystickNewStatus);
+      fillReference(joystickNewStatus);
 
+      left.Position.Y := 280 + (mapvalueint(joystickReference.I['PitchMin'],joystickReference.I['PitchMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['PitchCurrent'],joystickReference.B['PitchInv']))*-1;
+      left.Position.X := 100 + (mapvalueint(joystickReference.I['GierMin'],joystickReference.I['GierMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['GierCurrent'],joystickReference.B['GierInv']));
+      right.Position.Y := 280 + (mapvalueint(joystickReference.I['NickMin'],joystickReference.I['NickMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['NickCurrent'],joystickReference.B['NickInv']))*-1;
+      right.Position.X := 280 + (mapvalueint(joystickReference.I['RollMin'],joystickReference.I['RollMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['RollCurrent'],joystickReference.B['RollInv']));
+end;
+
+
+
+procedure TfrmMain.Timer1Timer(Sender: TObject);
+begin
+  if showsticks.IsChecked then setscreenjoystick(self);
+
+end;
 
 function TfrmMain.mapvalue(amin: Integer; amax: Integer; bmin: Integer;  bmax:Integer; valuea: Integer; invert: boolean) : string;
 var
@@ -455,8 +477,10 @@ begin
     tmStep := IncMilliSecond(tmStep, fTimer);
     lblTimer.Text := TimeToStr(tmStep);
 
+    if fmode = mRecordingRunning then doRecord(self);
+
   finally
-    tmrRun.Enabled := True;
+  tmrRun.Enabled := True;
   end;
 end;
 
@@ -538,51 +562,17 @@ begin
 end;
 
 
-procedure TfrmMain.DxJoystickStateChange(Sender: TObject);
+//todo
+procedure TfrmMain.doRecord(Sender:TObject);
 var
   csvTextFile : TextFile;
   j: integer;
-begin
-//
-  case fMode of
-    mCalibration :
-    begin
-      joystickNewStatus := SO;
-      getJoystickValuesToObject(joystickNewStatus);
-      compareObjects(joystickNewStatus);
-    end;
 
-
-    mRecordingStart :
-    begin
-      joystickNewStatus := SO;
-      getJoystickValuesToObject(joystickNewStatus);
-      if fButtonPressed or joystickNewStatus.A[joystickReference.S['FireArray']].O[joystickReference.I['Position']].B[joystickReference.S['ButtonVariant']] then
-      begin
-        fButtonPressed := False;
-        tmrRun.Enabled := True;
-        joystickRecorder := SO;
-        fTimer := 0;
-        fObjectIndex := 0;
-        lblStatus.Text := 'Press RETUN to stop recording!';
-        fMode := mRecordingRunning;
-      end;
-    end;
-
-
-    mRecordingRunning :
-    begin
+Begin
       joystickNewStatus := SO;
       getJoystickValuesToObject(joystickNewStatus);
       inc(fObjectIndex);
       fillReference(joystickNewStatus);
-
-      //Todo diese Berechnung sollte beim Test (aber nicht beim Recording angeeigt werden, damit das Rrcording nicht verhögert wird.
-      left.Position.Y := 280 + (mapvalueint(joystickReference.I['PitchMin'],joystickReference.I['PitchMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['PitchCurrent'],joystickReference.B['PitchInv']))*-1;
-      left.Position.X := 100 + (mapvalueint(joystickReference.I['GierMin'],joystickReference.I['GierMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['GierCurrent'],joystickReference.B['GierInv']));
-      right.Position.Y := 280 + (mapvalueint(joystickReference.I['NickMin'],joystickReference.I['NickMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['NickCurrent'],joystickReference.B['NickInv']))*-1;
-      right.Position.X := 280 + (mapvalueint(joystickReference.I['RollMin'],joystickReference.I['RollMax'],-50,50,joystickRecorder.A['Results'].O[fObjectIndex].I['RollCurrent'],joystickReference.B['RollInv']));
-
 
       if fButtonPressed or joystickNewStatus.A[joystickReference.S['FireArray']].O[joystickReference.I['Position']].B[joystickReference.S['ButtonVariant']] then
       begin
@@ -617,9 +607,52 @@ begin
 
         fMode := mNone;
       end;
+end;
+
+
+procedure TfrmMain.DxJoystickStateChange(Sender: TObject);
+var
+  csvTextFile : TextFile;
+  j: integer;
+begin
+//
+  case fMode of
+    mCalibration :
+    begin
+      joystickNewStatus := SO;
+      getJoystickValuesToObject(joystickNewStatus);
+      compareObjects(joystickNewStatus);
+    end;
+
+
+    mRecordingStart :
+    begin
+      joystickNewStatus := SO;
+      getJoystickValuesToObject(joystickNewStatus);
+      if fButtonPressed or joystickNewStatus.A[joystickReference.S['FireArray']].O[joystickReference.I['Position']].B[joystickReference.S['ButtonVariant']] then
+      begin
+        fButtonPressed := False;
+        tmrRun.Enabled := True;
+        joystickRecorder := SO;
+        fTimer := 0;
+        fObjectIndex := 0;
+        lblStatus.Text := 'Press RETUN to stop recording!';
+        fMode := mRecordingRunning;
+      end;
+    end;
+
+
+    mRecordingRunning :
+    begin
+         // doRecord(self);
     end;
   end;
 end;
+
+
+
+
+
 
 procedure TfrmMain.getJoystickValuesToObject(aReference : ISuperObject);
 var

@@ -83,7 +83,7 @@ object frmMain: TfrmMain
     Interval = 10
     OnTimer = tmrRunTimer
     Left = 768
-    Top = 8
+    Top = 16
   end
   object lblStatus: TLabel
     AutoSize = True
@@ -236,10 +236,22 @@ object frmMain: TfrmMain
     Text = 'O'
     TabOrder = 26
   end
+  object showsticks: TCheckBox
+    Position.X = 144.000000000000000000
+    Position.Y = 360.000000000000000000
+    TabOrder = 32
+    Text = 'Show Sticks'
+  end
   object DxJoystick: TFDxJoystick
     CooperativeLevel = []
     OnStateChange = DxJoystickStateChange
     Left = 688
     Top = 16
+  end
+  object Timer1: TTimer
+    Interval = 20
+    OnTimer = Timer1Timer
+    Left = 768
+    Top = 88
   end
 end
