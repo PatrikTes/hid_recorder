@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
   Left = 0
   Top = 0
-  Caption = 'Device'
+  Caption = 'AVIrem (c) JoyStick Recorder'
   ClientHeight = 391
   ClientWidth = 823
   Position = Designed
@@ -242,16 +242,31 @@ object frmMain: TfrmMain
     TabOrder = 32
     Text = 'Show Sticks'
   end
-  object DxJoystick: TFDxJoystick
-    CooperativeLevel = []
-    OnStateChange = DxJoystickStateChange
-    Left = 688
-    Top = 16
-  end
   object Timer1: TTimer
     Interval = 20
     OnTimer = Timer1Timer
     Left = 768
     Top = 88
+  end
+  object ColorAnimation2: TColorAnimation
+    Duration = 0.200000002980232200
+    StartValue = claWhite
+    StopValue = claWhite
+  end
+  object showRecording: TColorButton
+    Color = claCrimson
+    Position.X = 376.000000000000000000
+    Position.Y = 64.000000000000000000
+    Size.Width = 80.000000000000000000
+    Size.Height = 81.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 37
+    Visible = False
+  end
+  object DxJoystick: TFDxJoystick
+    CooperativeLevel = []
+    OnStateChange = DxJoystickStateChange
+    Left = 688
+    Top = 16
   end
 end

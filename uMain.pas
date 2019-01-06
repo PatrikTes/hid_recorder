@@ -9,7 +9,8 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, DateUtils,Winapi.ShlObj,
   XSuperObject, FDxJoystick, FMX.TMSBaseControl, FMX.TMSGridCell,
   FMX.TMSGridOptions, FMX.TMSGridData, FMX.TMSCustomGrid, FMX.TMSGrid,
-  FMX.StdCtrls, FMX.ListBox, FMX.Objects, FMX.Controls.Presentation;
+  FMX.StdCtrls, FMX.ListBox, FMX.Objects, FMX.Controls.Presentation, FMX.Ani,
+  FMX.Colors;
 
 type
   TMode = (mNone, mCalibration, mRecordingStart, mRecordingRunning);
@@ -37,6 +38,8 @@ type
     Panel2: TPanel;
     showsticks: TCheckBox;
     Timer1: TTimer;
+    ColorAnimation2: TColorAnimation;
+    showRecording: TColorButton;
     procedure FormCreate(Sender: TObject);
     procedure comDeviceChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -188,7 +191,7 @@ begin
   getJoystickValuesToObject(joystickNewStatus);
 
   lblStatus.Visible := True;
-  lblStatus.Text := 'Lets start the callibration! Leave sticks in middle position and press the fire Button OR Return Key on Keyboard!';
+  lblStatus.Text := 'Put sticks in middle position and press the fire Button OR Return Key on Keyboard!';
 
   fMode := mCalibration;
   fStep := wFire;
@@ -469,18 +472,20 @@ var
   tmStep : TDateTime;
 begin
   //
-  tmStep := 0;
-  tmrRun.Enabled := False;
-  try
-    fTimer := fTimer + tmrRun.Interval;
+  if fmode = mRecordingRunning then
+  begin
+    tmStep := 0;
+    tmrRun.Enabled := False;
+    try
+      fTimer := fTimer + tmrRun.Interval;
 
-    tmStep := IncMilliSecond(tmStep, fTimer);
-    lblTimer.Text := TimeToStr(tmStep);
+      tmStep := IncMilliSecond(tmStep, fTimer);
+      lblTimer.Text := TimeToStr(tmStep);
+      doRecord(self);
 
-    if fmode = mRecordingRunning then doRecord(self);
-
-  finally
-  tmrRun.Enabled := True;
+    finally
+    tmrRun.Enabled := True;
+    end;
   end;
 end;
 
@@ -583,6 +588,8 @@ Begin
         btnRecording.Enabled := True;
         comDevice.Enabled := True;
 
+        showRecording.Visible := false;
+
         if saveCSV.Execute then
         begin
           AssignFile(csvTextFile, saveCSV.FileName);
@@ -601,6 +608,7 @@ Begin
 
               end;
             end;
+
 
           CloseFile(csvTextFile);
         end;
@@ -638,6 +646,7 @@ begin
         fObjectIndex := 0;
         lblStatus.Text := 'Press RETUN to stop recording!';
         fMode := mRecordingRunning;
+        showRecording.Visible := true;
       end;
     end;
 
