@@ -10,7 +10,7 @@ uses
   XSuperObject, FDxJoystick, FMX.TMSBaseControl, FMX.TMSGridCell,
   FMX.TMSGridOptions, FMX.TMSGridData, FMX.TMSCustomGrid, FMX.TMSGrid,
   FMX.StdCtrls, FMX.ListBox, FMX.Objects, FMX.Controls.Presentation, FMX.Ani,
-  FMX.Colors;
+  FMX.Colors, Windows;
 
 type
   TMode = (mNone, mCalibration, mRecordingStart, mRecordingRunning);
@@ -89,6 +89,8 @@ type
 
 var
   frmMain: TfrmMain;
+  initialtime, elapsedtime: Integer;
+
 
 implementation
 
@@ -471,21 +473,24 @@ procedure TfrmMain.tmrRunTimer(Sender: TObject);
 var
   tmStep : TDateTime;
 begin
-  //
+
   if fmode = mRecordingRunning then
   begin
-    tmStep := 0;
-    tmrRun.Enabled := False;
-    try
-      fTimer := fTimer + tmrRun.Interval;
+ //   tmStep := 0;
+ //   tmrRun.Enabled := False;
+ //   try
+ //     fTimer := fTimer + tmrRun.Interval;
 
-      tmStep := IncMilliSecond(tmStep, fTimer);
-      lblTimer.Text := TimeToStr(tmStep);
+ //     tmStep := IncMilliSecond(tmStep, fTimer);
+
+      elapsedtime :=  Windows.GetTickCount - initialtime;
+      fTimer := elapsedtime;
+      lblTimer.Text := 'Recording time: ' + inttostr(round(elapsedtime/1000));
       doRecord(self);
 
-    finally
-    tmrRun.Enabled := True;
-    end;
+ //   finally
+ //   tmrRun.Enabled := True;
+ //   end;
   end;
 end;
 
@@ -594,7 +599,7 @@ Begin
         begin
           AssignFile(csvTextFile, saveCSV.FileName);
           Rewrite(csvTextFile);
-          writeln(csvTextFile, '"time";"pitch";"gier";"nick";"roll"');
+          writeln(csvTextFile, 'time;pitch;gier;nick;roll');
             for j := 0 to joystickRecorder.A['Results'].Length - 1 do
             begin
               try
@@ -647,6 +652,7 @@ begin
         lblStatus.Text := 'Press RETUN to stop recording!';
         fMode := mRecordingRunning;
         showRecording.Visible := true;
+        initialtime := Windows.GetTickCount;
       end;
     end;
 
